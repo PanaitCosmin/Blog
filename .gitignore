@@ -1,0 +1,20 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Frontend build files
+client/dist/
+client/build/
+
+# Environment variables
+client/.env
+server/.env
+
+# Logs
+logs/
+*.log
+
+# Editor settings
+.vscode/
+.idea/
