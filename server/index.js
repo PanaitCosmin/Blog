@@ -12,27 +12,27 @@ const PORT = process.env.PORT
 const app = express()
 
 // Cors Options
-// const corsOptions = {
-//     origin: process.env.CLIENT, // Frontend URL
-//     credentials: true, // Allow credentials (cookies)
-// };
+const corsOptions = {
+    origin: process.env.CLIENT, // Frontend URL
+    credentials: true, // Allow credentials (cookies)
+};
 
 
 // Allow requests from your frontend on Vercel
-const allowedOrigins = [
-    process.env.CLIENT, // Ensure this is set in Render's Environment Variables
-    'https://blog-silk-eta-41.vercel.app', // Replace with your actual frontend URL
-  ];
+// const allowedOrigins = [
+//     process.env.CLIENT, // Ensure this is set in Render's Environment Variables
+//     'https://blog-silk-eta-41.vercel.app', // Replace with your actual frontend URL
+//   ];
   
-  app.use(
-    cors({
-      origin: allowedOrigins,
-      credentials: true, // If using authentication/cookies
-    })
-  );
+//   app.use(
+//     cors({
+//       origin: allowedOrigins,
+//       credentials: true, // If using authentication/cookies
+//     })
+//   );
 
 // Middleware
-// app.use(cors(corsOptions))
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
