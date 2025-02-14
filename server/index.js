@@ -12,11 +12,12 @@ const PORT = process.env.PORT
 const app = express()
 
 // Cors Options
-const corsOptions = {
-    origin: process.env.CLIENT, // Frontend URL
-    credentials: true, // Allow credentials (cookies)
-};
+// const corsOptions = {
+//     origin: process.env.CLIENT, // Frontend URL
+//     credentials: true, // Allow credentials (cookies)
+// };
 
+const allowedOrigin = process.env.CLIENT; 
 
 // Allow requests from your frontend on Vercel
 // const allowedOrigins = [
@@ -32,7 +33,11 @@ const corsOptions = {
 //   );
 
 // Middleware
-app.use(cors(corsOptions))
+app.use(cors({
+    origin: allowedOrigin,  // Allow only the frontend domain
+    credentials: true,      // If using cookies/authentication
+  }));
+// app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
