@@ -5,6 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { v2 as cloudinary } from 'cloudinary';
+
 // Get the current directory using import.meta.url and fileURLToPath
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,37 +96,74 @@ export const addPost = (req, res) => {
 
 // Delete Single Post
 export const deletePost = (req, res) => {
-    const postId = req.params.id
-    const token = req.cookies.access_token
-    
-    if (!token) return res.status(401).json({
-        message: 'Not authenticated'
-    })
+    const postId = req.params.id;
+    const token = req.cookies.access_token;
+
+    if (!token) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
-        if (err) return res.status(403).json({
-            message: 'Token is not valid'
-        })
+        if (err) {
+            return res.status(403).json({ message: 'Token is not valid' });
+        }
 
-        const queryDeletePost = 'DELETE FROM posts WHERE `id` = ? AND `userid` = ?'
-
-        db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
-            if (err) return res.status(500).json({
-                message:'Database error occurred while checking user.'
-            }) 
-
-            if (data.affectedRows === 0) {
-                return res.status(404).json({
-                    message: 'Post not found'
-                })
+        // Retrieve the post and get the image URL
+        const queryGetPost = 'SELECT img FROM posts WHERE id = ? AND userid = ?';
+        db.query(queryGetPost, [postId, userInfo.id], async (err, result) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error while fetching post.' });
             }
 
-            return res.status(202).json({
-                message: 'Post deleted!'
-            })
-        })
-    })
-}
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Post not found or unauthorized.' });
+            }
+
+            const imageUrl = result[0].img;
+
+            // Function to extract Public ID from Cloudinary URL
+            const getPublicIdFromUrl = (url) => {
+                try {
+                    const parts = url.split('/');
+                    const fileName = parts.pop(); // e.g., "image.webp"
+                    const folder = parts.slice(parts.indexOf("blog_images")).join('/'); // "blog_images"
+                    return `${folder}/${fileName.split('.')[0]}`; // "blog_images/imageName"
+                } catch (error) {
+                    console.error("Error extracting public ID:", error);
+                    return null;
+                }
+            };
+
+            const publicId = getPublicIdFromUrl(imageUrl);
+
+            // Delete the image from Cloudinary (if exists)
+            if (publicId) {
+                try {
+                    await cloudinary.uploader.destroy(publicId);
+                    console.log(`Deleted image: ${publicId}`);
+                } catch (error) {
+                    console.error('Cloudinary image deletion failed:', error);
+                }
+            } else {
+                console.error("Public ID extraction failed, image not deleted.");
+            }
+
+            // Delete the post from the database
+            const queryDeletePost = 'DELETE FROM posts WHERE id = ? AND userid = ?';
+            db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Database error occurred while deleting post.' });
+                }
+
+                if (data.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Post not found' });
+                }
+
+                return res.status(202).json({ message: 'Post deleted successfully!' });
+            });
+        });
+    });
+};
 
 
 // Update Post
