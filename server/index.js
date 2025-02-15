@@ -5,7 +5,7 @@ import authRoute from './routes/authRoute.js'
 import postRoute from './routes/postRoute.js'
 import userRoute from './routes/userRoute.js'
 import { db } from './db.js'
-import { upload, getPublicIdFromUrl, deleteOldImage  } from './helpers/upload.js'
+import { upload, deleteOldImage  } from './helpers/upload.js'
 
 
 const PORT = process.env.PORT
@@ -49,14 +49,10 @@ app.listen(PORT, () => {
 })
 
 // Test DB connection
-const testDBConnection = async () => {
-    try {
-        const connection = await db.getConnection(); // Get a connection from the pool
-        console.log('✅ Connected to the database');
-        connection.release(); // Release the connection back to the pool
-    } catch (err) {
-        console.error('❌ Database connection failed:', err.message);
+db.connect((err) => {
+    if (err) {
+        console.error('Database connection failed:', err.stack)
+    } else {
+        console.log('Connected to the database')
     }
-};
-
-testDBConnection();
+})
