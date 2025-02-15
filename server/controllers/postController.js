@@ -203,31 +203,3 @@ export const updatePost = (req, res) => {
         })
     })
 }
-
-
-// Delete post image
-export const deleteImage = (req, res) => {
-    const { imagePath } = req.body;
-
-    // Ensure the path does not start with '/'
-    const normalizedPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-
-    // Resolve the correct absolute path (adjust based on your server structure)
-    const fullImagePath = path.join(__dirname, '../../client/public', normalizedPath);
-
-    // Check if the file exists
-    fs.access(fullImagePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            return res.status(400).json({ message: 'Old image not found' });
-        }
-
-        // Delete the old image
-        fs.unlink(fullImagePath, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error deleting old image' });
-            }
-
-            return res.status(200).json({ message: 'Old image deleted successfully' });
-        });
-    });
-};
