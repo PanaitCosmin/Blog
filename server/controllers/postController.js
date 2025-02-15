@@ -17,7 +17,8 @@ export const getPost = async (req, res) => {
 
     db.query(queryPost, [req.params.id], (err, data) => {
         if (err) return res.status(500).json({
-            message:'Database error occurred while checking user.'
+            message:'Database error occurred while checking user.',
+            error: err,
         })
 
         return res.status(200).json(data[0])
@@ -33,9 +34,12 @@ export const getPosts = (req, res) => {
     const values = req.query.cat ? [req.query.cat] : []
 
     db.query(queryPosts, values, (err, data) => {
-        if (err) return res.status(500).json({
-            message:'Database error occurred while checking user.'
-        }) 
+        if (err) {
+            console.error("DB error")
+            return res.status(500).json({
+            message:'Database error occurred while checking user.',
+            error: err.message,
+        }) }
 
         return res.status(200).json(data)
     })
@@ -49,7 +53,7 @@ export const getMenuPosts = (req, res) => {
     const values = [req.query.cat, parseInt(req.query.parrentId)];
 
     db.query(queryMenuPosts, values, (err, data) => {
-        if (err) return res.status(500).json({ message: 'Database error occurred.' });
+        if (err) return res.status(500).json({ message: 'Database error occurred.', error: err });
 
         return res.status(200).json(data);
     });
@@ -152,7 +156,7 @@ export const deletePost = (req, res) => {
             const queryDeletePost = 'DELETE FROM posts WHERE id = ? AND userid = ?';
             db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
                 if (err) {
-                    return res.status(500).json({ message: 'Database error occurred while deleting post.' });
+                    return res.status(500).json({ message: 'Database error occurred while deleting post.', error: err });
                 }
 
                 if (data.affectedRows === 0) {
