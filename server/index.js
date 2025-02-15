@@ -49,10 +49,14 @@ app.listen(PORT, () => {
 })
 
 // Test DB connection
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err.stack)
-    } else {
-        console.log('Connected to the database')
+const testDBConnection = async () => {
+    try {
+        const connection = await db.getConnection(); // Get a connection from the pool
+        console.log('✅ Connected to the database');
+        connection.release(); // Release the connection back to the pool
+    } catch (err) {
+        console.error('❌ Database connection failed:', err.message);
     }
-})
+};
+
+testDBConnection();
