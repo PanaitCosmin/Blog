@@ -20,90 +20,55 @@ const Write = () => {
   const [cat, setCat] = useState(state?.cat || 'art');
   const [img, setImg] = useState(null); // Image is null initially, to be updated if needed
 
-  // Upload Image function
-  const uploadImage = async (imageFile) => {
+  const uploadImage = async (imageFile, oldImageUrl) => {
     const formData = new FormData();
-    formData.append('file', imageFile);
-  
+    formData.append('image', imageFile);
+    if (oldImageUrl) formData.append('oldImage', oldImageUrl); // Send old image URL
+    
     try {
-      // Upload image to server
       const response = await axios.post('/api/upload', formData);
   
-      // Return the filename from the response
-      if (response.data.filename) {
-        return response.data.filename; // Extract the filename from response data
+      if (response.data.url) {
+        return response.data.url; // Cloudinary image URL
       } else {
-        throw new Error('Image upload failed: No filename returned');
+        throw new Error('Image upload failed: No URL returned');
       }
     } catch (error) {
       console.error('Image upload failed:', error);
-      throw error; // Ensure the error is propagated
+      throw error;
     }
   };
-  
-  // Delete image
-  const deleteOldImage = async (oldImagePath) => {
-    console.log("Hit deleteOldImage")
-    try {
-      await axios.delete('/api/posts/delete-img', {
-        data: {
-          imagePath: oldImagePath
-        }
-      })
-    } catch (error) {
-      console.error('Error deleting old image:', error)
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    let imageUrl = state?.img; // Default image URL (existing image) if no new image is uploaded
+    let imageUrl = state?.img; // Default to existing image URL
   
-    // Only upload a new image if the user selected one
     if (img) {
       try {        
-        // delete old image
-        if (state?.img) await deleteOldImage(state.img)
-
-        const uploadedImgUrl = await uploadImage(img);
-        imageUrl = uploadedImgUrl; // Update image URL if new image uploaded
+        // Upload new image & send old image URL to delete it
+        imageUrl = await uploadImage(img, state?.img);
       } catch (error) {
-        return; // Stop the process if the image upload fails
+        return; // Stop submission if image upload fails
       }
     }
   
-    // Check if imageUrl is already a full path (i.e., starts with '../public/upload/'), if not, prepend the path
-    if (imageUrl && !imageUrl.startsWith('../upload/')) {
-      //imageUrl = `../public/upload/${imageUrl}`; // Prepend the path if it's just the filename
-      imageUrl = `../upload/${imageUrl}`; // Prepend the path if it's just the filename
-    }
-  
-    // Data for the post (including the image URL)
     const postData = {
       title,
       desc,
       cat,
-      img: imageUrl, // Use the updated image URL (either new or existing)
-      date: moment().format('YYYY-MM-DD HH:mm:ss'), // Current timestamp for the post
+      img: imageUrl, // Use updated Cloudinary URL
+      date: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
   
     try {
       if (state) {
-        // Update the existing post
-        await axios.put(`/api/posts/${state.id}`, postData, {
-          withCredentials: true,
-        });
-        toast.success('Post updated!')
+        await axios.put(`/api/posts/${state.id}`, postData, { withCredentials: true });
+        toast.success('Post updated!');
       } else {
-        // Create a new post
-        await axios.post('/api/posts', postData, {
-          withCredentials: true,
-        });
-        toast.success('Post created!')
+        await axios.post('/api/posts', postData, { withCredentials: true });
+        toast.success('Post created!');
       }
-  
-      // Redirect to the homepage (or wherever you need)
       navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.message || 'An error occurred while submitting the post.');
@@ -111,7 +76,7 @@ const Write = () => {
     }
   };
   
-  
+
   return (
     <div className="flex flex-col md:flex-row gap-8 p-6 md:p-12 bg-gray-100 min-h-150 mt-[15vh]">
       {/* Left Section - Post Content */}
