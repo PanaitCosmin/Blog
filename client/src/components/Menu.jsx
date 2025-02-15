@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom'
 const Menu = ({cat, parrentId}) => {
   const [posts, setPosts] = useState([])
 
-  console.log(cat)
-  console.log(parrentId)
-
   useEffect(() => {
     if (!cat || parrentId === undefined) return; // Prevent fetching if data is not ready
   
