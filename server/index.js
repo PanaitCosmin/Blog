@@ -5,32 +5,14 @@ import authRoute from './routes/authRoute.js'
 import postRoute from './routes/postRoute.js'
 import userRoute from './routes/userRoute.js'
 import { db } from './db.js'
-import { upload } from './helpers/upload.js'
+import { upload, getPublicIdFromUrl, deleteOldImage  } from './helpers/upload.js'
 
 
 const PORT = process.env.PORT
 const app = express()
 
-// Cors Options
-// const corsOptions = {
-//     origin: process.env.CLIENT, // Frontend URL
-//     credentials: true, // Allow credentials (cookies)
-// };
-
 const allowedOrigin = process.env.CLIENT; 
 
-// Allow requests from your frontend on Vercel
-// const allowedOrigins = [
-//     process.env.CLIENT, // Ensure this is set in Render's Environment Variables
-//     'https://blog-silk-eta-41.vercel.app', // Replace with your actual frontend URL
-//   ];
-  
-//   app.use(
-//     cors({
-//       origin: allowedOrigins,
-//       credentials: true, // If using authentication/cookies
-//     })
-//   );
 
 // Middleware
 app.use(cors({
@@ -42,14 +24,19 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-app.post('/api/upload', upload.single('file'), function (req, res) {
-    const file = req.file;
-    if (!file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-    // Send back the filename of the uploaded image
-    res.status(200).json({ filename: file.filename });
-  });
+// Image Upload Route
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+  const newImageUrl = req.file.path; // Cloudinary image URL from multer
+  const oldImageUrl = req.body.oldImage; // Old image URL from request
+
+  // Delete old image if it exists
+  if (oldImageUrl) {
+      await deleteOldImage(oldImageUrl);
+  }
+
+  res.json({ url: newImageUrl }); // Return new Cloudinary image URL
+});
+
   
 
 app.use('/api/auth', authRoute)
