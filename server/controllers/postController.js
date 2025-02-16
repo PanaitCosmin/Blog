@@ -61,149 +61,254 @@ export const getMenuPosts = (req, res) => {
 
 
 // Create Post
-export const addPost = (req, res) => {
-    const token = req.cookies.access_token
-    if (!token) return res.status(401).json({
-        message: 'Not authenticated'
-    })
+// export const addPost = (req, res) => {
+//     const token = req.cookies.access_token
+//     if (!token) return res.status(401).json({
+//         message: 'Not authenticated'
+//     })
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
-        if (err) return res.status(403).json({
-            message: 'Token is not valid'
-        })
+//     jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
+//         if (err) return res.status(403).json({
+//             message: 'Token is not valid'
+//         })
 
-        const queryAddPost = 'INSERT INTO posts (`title`, `desc`, `img`, `cat`, `date`, `userid`) VALUES (?)'
+//         const queryAddPost = 'INSERT INTO posts (`title`, `desc`, `img`, `cat`, `date`, `userid`) VALUES (?)'
     
-        const postValues = [
-            req.body.title,
-            req.body.desc,
-            req.body.img,
-            req.body.cat,
-            req.body.date,
-            userInfo.id,
-        ]
+//         const postValues = [
+//             req.body.title,
+//             req.body.desc,
+//             req.body.img,
+//             req.body.cat,
+//             req.body.date,
+//             userInfo.id,
+//         ]
 
-        db.query(queryAddPost, [postValues], (err, data) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({
-                    message: err.message,
-                });
-            }
+//         db.query(queryAddPost, [postValues], (err, data) => {
+//             if (err) {
+//                 console.error('Database error:', err);
+//                 return res.status(500).json({
+//                     message: err.message,
+//                 });
+//             }
 
-            return res.status(201).json({
-                message: 'Post created!'
-            })
-        })
-    })
-}
+//             return res.status(201).json({
+//                 message: 'Post created!'
+//             })
+//         })
+//     })
+// }
 
-// Delete Single Post
-export const deletePost = (req, res) => {
-    const postId = req.params.id;
-    const token = req.cookies.access_token;
-
-    if (!token) {
-        return res.status(401).json({ message: 'Not authenticated' });
+export const addPost = (req, res) => {
+    // Get user info from the session
+    if (!req.session.user) {
+        return res.status(401).json({
+            message: 'Not authenticated'
+        });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
+    const userInfo = req.session.user; // User info stored in session
+
+    const queryAddPost = 'INSERT INTO posts (`title`, `desc`, `img`, `cat`, `date`, `userid`) VALUES (?)';
+
+    const postValues = [
+        req.body.title,
+        req.body.desc,
+        req.body.img,
+        req.body.cat,
+        req.body.date,
+        userInfo.id, // Get user ID from session
+    ];
+
+    db.query(queryAddPost, [postValues], (err, data) => {
         if (err) {
-            return res.status(403).json({ message: 'Token is not valid' });
+            console.error('Database error:', err);
+            return res.status(500).json({
+                message: err.message,
+            });
         }
 
-        // Retrieve the post and get the image URL
-        const queryGetPost = 'SELECT img FROM posts WHERE id = ? AND userid = ?';
-        db.query(queryGetPost, [postId, userInfo.id], async (err, result) => {
-            if (err) {
-                return res.status(500).json({ message: 'Database error while fetching post.' });
-            }
-
-            if (result.length === 0) {
-                return res.status(404).json({ message: 'Post not found or unauthorized.' });
-            }
-
-            const imageUrl = result[0].img;
-
-            // Function to extract Public ID from Cloudinary URL
-            const getPublicIdFromUrl = (url) => {
-                try {
-                    const parts = url.split('/');
-                    const fileName = parts.pop(); // e.g., "image.webp"
-                    const folder = parts.slice(parts.indexOf("blog_images")).join('/'); // "blog_images"
-                    return `${folder}/${fileName.split('.')[0]}`; // "blog_images/imageName"
-                } catch (error) {
-                    console.error("Error extracting public ID:", error);
-                    return null;
-                }
-            };
-
-            const publicId = getPublicIdFromUrl(imageUrl);
-
-            // Delete the image from Cloudinary (if exists)
-            if (publicId) {
-                try {
-                    await cloudinary.uploader.destroy(publicId);
-                    console.log(`Deleted image: ${publicId}`);
-                } catch (error) {
-                    console.error('Cloudinary image deletion failed:', error);
-                }
-            } else {
-                console.error("Public ID extraction failed, image not deleted.");
-            }
-
-            // Delete the post from the database
-            const queryDeletePost = 'DELETE FROM posts WHERE id = ? AND userid = ?';
-            db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
-                if (err) {
-                    return res.status(500).json({ message: 'Database error occurred while deleting post.', error: err });
-                }
-
-                if (data.affectedRows === 0) {
-                    return res.status(404).json({ message: 'Post not found' });
-                }
-
-                return res.status(202).json({ message: 'Post deleted successfully!' });
-            });
+        return res.status(201).json({
+            message: 'Post created!'
         });
     });
 };
 
 
-// Update Post
-export const updatePost = (req, res) => {
-    const postId = req.params.id
-    const token = req.cookies.access_token
+// Delete Single Post
+// export const deletePost = (req, res) => {
+//     const postId = req.params.id;
+//     const token = req.cookies.access_token;
 
-    if (!token) return res.status(401).json({ message: 'Not authenticated' })
+//     if (!token) {
+//         return res.status(401).json({ message: 'Not authenticated' });
+//     }
 
+//     jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
+//         if (err) {
+//             return res.status(403).json({ message: 'Token is not valid' });
+//         }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, userInfo) => {
-        if (err) return res.status(403).json({ message: 'Token is not valid' })
+//         // Retrieve the post and get the image URL
+//         const queryGetPost = 'SELECT img FROM posts WHERE id = ? AND userid = ?';
+//         db.query(queryGetPost, [postId, userInfo.id], async (err, result) => {
+//             if (err) {
+//                 return res.status(500).json({ message: 'Database error while fetching post.' });
+//             }
 
-        const queryUpdatePost = 'UPDATE posts SET `title` = ?, `desc` = ?, `img` = ?, `date` = ?, `cat` = ? WHERE `id` = ? AND `userid` = ?'
+//             if (result.length === 0) {
+//                 return res.status(404).json({ message: 'Post not found or unauthorized.' });
+//             }
 
-        const updateValues = [
-            req.body.title,
-            req.body.desc,
-            req.body.img,
-            req.body.date,
-            req.body.cat,
-            postId,
-            userInfo.id
-        ]
+//             const imageUrl = result[0].img;
 
-        db.query(queryUpdatePost, updateValues, (err, data) => {
+//             // Function to extract Public ID from Cloudinary URL
+//             const getPublicIdFromUrl = (url) => {
+//                 try {
+//                     const parts = url.split('/');
+//                     const fileName = parts.pop(); // e.g., "image.webp"
+//                     const folder = parts.slice(parts.indexOf("blog_images")).join('/'); // "blog_images"
+//                     return `${folder}/${fileName.split('.')[0]}`; // "blog_images/imageName"
+//                 } catch (error) {
+//                     console.error("Error extracting public ID:", error);
+//                     return null;
+//                 }
+//             };
+
+//             const publicId = getPublicIdFromUrl(imageUrl);
+
+//             // Delete the image from Cloudinary (if exists)
+//             if (publicId) {
+//                 try {
+//                     await cloudinary.uploader.destroy(publicId);
+//                     console.log(`Deleted image: ${publicId}`);
+//                 } catch (error) {
+//                     console.error('Cloudinary image deletion failed:', error);
+//                 }
+//             } else {
+//                 console.error("Public ID extraction failed, image not deleted.");
+//             }
+
+//             // Delete the post from the database
+//             const queryDeletePost = 'DELETE FROM posts WHERE id = ? AND userid = ?';
+//             db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
+//                 if (err) {
+//                     return res.status(500).json({ message: 'Database error occurred while deleting post.', error: err });
+//                 }
+
+//                 if (data.affectedRows === 0) {
+//                     return res.status(404).json({ message: 'Post not found' });
+//                 }
+
+//                 return res.status(202).json({ message: 'Post deleted successfully!' });
+//             });
+//         });
+//     });
+// };
+export const deletePost = (req, res) => {
+    const postId = req.params.id;
+
+    // Check if user is authenticated via session
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    const userInfo = req.session.user; // Retrieve user info from session
+
+    // Retrieve the post and get the image URL
+    const queryGetPost = 'SELECT img FROM posts WHERE id = ? AND userid = ?';
+    db.query(queryGetPost, [postId, userInfo.id], async (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error while fetching post.' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Post not found or unauthorized.' });
+        }
+
+        const imageUrl = result[0].img;
+
+        // Function to extract Public ID from Cloudinary URL
+        const getPublicIdFromUrl = (url) => {
+            try {
+                const parts = url.split('/');
+                const fileName = parts.pop(); // e.g., "image.webp"
+                const folder = parts.slice(parts.indexOf("blog_images")).join('/'); // "blog_images"
+                return `${folder}/${fileName.split('.')[0]}`; // "blog_images/imageName"
+            } catch (error) {
+                console.error("Error extracting public ID:", error);
+                return null;
+            }
+        };
+
+        const publicId = getPublicIdFromUrl(imageUrl);
+
+        // Delete the image from Cloudinary (if exists)
+        if (publicId) {
+            try {
+                await cloudinary.uploader.destroy(publicId);
+                console.log(`Deleted image: ${publicId}`);
+            } catch (error) {
+                console.error('Cloudinary image deletion failed:', error);
+            }
+        } else {
+            console.error("Public ID extraction failed, image not deleted.");
+        }
+
+        // Delete the post from the database
+        const queryDeletePost = 'DELETE FROM posts WHERE id = ? AND userid = ?';
+        db.query(queryDeletePost, [postId, userInfo.id], (err, data) => {
             if (err) {
-                console.error("Database Error:", err)
-                return res.status(500).json({ message: 'Database error', error: err.message })
+                return res.status(500).json({ message: 'Database error occurred while deleting post.', error: err });
             }
 
             if (data.affectedRows === 0) {
-                return res.status(404).json({ error: 'Post not found' })
-            }    
-            
-            return res.status(200).json({ success: "Post updated!" })
-        })
-    })
-}
+                return res.status(404).json({ message: 'Post not found' });
+            }
+
+            return res.status(202).json({ message: 'Post deleted successfully!' });
+        });
+    });
+};
+
+
+
+// Update Post
+export const updatePost = (req, res) => {
+    const postId = req.params.id;
+
+    // Check if user is authenticated via session
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    const userInfo = req.session.user; // Retrieve user info from session
+
+    const queryUpdatePost = `
+        UPDATE posts 
+        SET title = ?, \`desc\` = ?, img = ?, date = ?, cat = ? 
+        WHERE id = ? AND userid = ?`;
+
+    const updateValues = [
+        req.body.title,
+        req.body.desc,
+        req.body.img,
+        req.body.date,
+        req.body.cat,
+        postId,
+        userInfo.id
+    ];
+
+    db.query(queryUpdatePost, updateValues, (err, data) => {
+        if (err) {
+            console.error("Database Error:", err);
+            return res.status(500).json({ message: 'Database error', error: err.message });
+        }
+
+        if (data.affectedRows === 0) {
+            return res.status(404).json({ error: 'Post not found or unauthorized' });
+        }    
+
+        return res.status(200).json({ success: "Post updated!" });
+    });
+};
+

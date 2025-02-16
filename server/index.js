@@ -6,7 +6,7 @@ import postRoute from './routes/postRoute.js'
 import userRoute from './routes/userRoute.js'
 import { db } from './db.js'
 import { upload, deleteOldImage  } from './helpers/upload.js'
-
+import session from 'express-session';
 
 const PORT = process.env.PORT
 const app = express()
@@ -22,6 +22,18 @@ app.use(cors({
 // app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
+
+app.use(session({
+    secret: process.env.SESSION_SECRET, // Secret for signing the session ID
+    resave: false,  // Don't save session if nothing changed
+    saveUninitialized: false, // Don't create session until something is stored
+    cookie: {
+        httpOnly: true, // Prevents JavaScript access
+        secure: process.env.NODE_ENV === 'production', // Only secure in production
+        sameSite: 'Lax', // Helps prevent CSRF attacks
+        maxAge: 24 * 60 * 60 * 1000, // 1-day session duration
+    }
+}));
 
 // Ensure response headers allow credentials
 app.use((req, res, next) => {
