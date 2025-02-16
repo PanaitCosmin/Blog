@@ -53,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const logout = async (inputs) => {
         try {
-            const res = await axios.post('http://localhost:8080/api/auth/logout', {}, { withCredentials: true })
+            const res = await axios.post('/api/auth/logout', {}, { withCredentials: true })
             setCurrentUser(null)
             toast.success("User logout successfully");
         } catch (error) {
