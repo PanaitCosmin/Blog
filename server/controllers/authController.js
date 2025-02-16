@@ -105,7 +105,7 @@ export const login = async (req, res) => {
             res.cookie('access_token', token, {
                 httpOnly: true,
                 sameSite: 'None',//process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                secure: process.env.NODE_ENV === 'production'
+                secure: true//process.env.NODE_ENV === 'production'
             }).status(200).json({
                 user: other,
                 success: "Login successfully"
@@ -121,6 +121,6 @@ export const logout = (req, res) => {
     res.clearCookie("access_token", {
         httpOnly: true, // Ensures the cookie is not accessible via JavaScript
         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Dynamic sameSite based on environment
-        secure: process.env.NODE_ENV === "production", // Only secure cookies in production
+        secure: true//process.env.NODE_ENV === "production", // Only secure cookies in production
     }).status(200).json({message: 'User has been logged out.'})
 }
