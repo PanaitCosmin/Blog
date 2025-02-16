@@ -12,7 +12,7 @@ const PORT = process.env.PORT
 const app = express()
 
 const allowedOrigin = process.env.CLIENT; 
-
+console.log('Origin:', allowedOrigin)
 
 // Middleware
 app.use(cors({
