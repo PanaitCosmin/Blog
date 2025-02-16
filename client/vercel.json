@@ -1,0 +1,18 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "@VITE_API_BASE_URL/$1"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/api/(.*)",
+        "headers": [
+          { "key": "Access-Control-Allow-Credentials", "value": "true" },
+          { "key": "Access-Control-Allow-Origin", "value": "https://blog-panaitcosmins-projects.vercel.app" }
+        ]
+      }
+    ]
+  }
+  
