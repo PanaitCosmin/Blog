@@ -2,6 +2,7 @@ import { db } from "../db.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+const allowedOrigin = process.env.CLIENT; 
 
 export const getMe = (req, res) => {
     const token = req.cookies.access_token
@@ -104,13 +105,22 @@ export const login = async (req, res) => {
             // Set token in a cookie
             res.cookie('access_token', token, {
                 httpOnly: true,
-                sameSite: 'None',//process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                secure: true,//process.env.NODE_ENV === 'production'
+                sameSite: 'None',
+                secure: true,
                 path: '/'
-            }).status(200).json({
+            });
+
+            // Set headers explicitly
+            res.setHeader("Set-Cookie", `access_token=${token}; Path=/; HttpOnly; Secure; SameSite=None`);
+            res.setHeader("Access-Control-Allow-Credentials", "true");
+            res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+
+            // Send response separately
+            res.status(200).json({
                 user: other,
                 success: "Login successfully"
-            })
+            });
+
         })
     } catch (error) {
         console.log('Login error:', error)
