@@ -12,7 +12,7 @@ const Menu = ({cat, parrentId}) => {
     const fetchData = async () => {
       try {
         setIsLoading(true)
-        const res = await axios.get(`/api/posts/menu/?cat=${cat}&parrentId=${parrentId}`);
+        const res = await axios.get(`/api/posts/menu/?cat=${cat}&parrentId=${parrentId}`, {withCredentials: true});
         setPosts(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.log(error);

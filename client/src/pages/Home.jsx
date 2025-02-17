@@ -13,7 +13,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true)
-        const res = await axios.get(`/api/posts${cat}`)
+        const res = await axios.get(`/api/posts${cat}`, {withCredentials: true})
         setPosts(res.data)
       } catch (error) {
         console.log(error)

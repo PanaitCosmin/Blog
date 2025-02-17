@@ -41,7 +41,8 @@ const sessionStore = new (MySQLStore(session))({
 app.use(cors({
     origin: allowedOrigin,  // Allow only the frontend domain
     credentials: true,      // If using cookies/authentication
-  }));
+    allowedHeaders: ["content-type", "authorization"],
+}));
 
   app.use(session({
     name: 'session_name',

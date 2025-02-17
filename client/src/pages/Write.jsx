@@ -26,7 +26,7 @@ const Write = () => {
     if (oldImageUrl) formData.append('oldImage', oldImageUrl); // Send old image URL
     
     try {
-      const response = await axios.post('/api/upload', formData);
+      const response = await axios.post('/api/upload', formData, {withCredentials: true});
   
       if (response.data.url) {
         return response.data.url; // Cloudinary image URL

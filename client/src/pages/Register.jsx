@@ -17,7 +17,7 @@ const Register = () => {
     e.preventDefault();
     try {
       // const { data } = await axios.post('http://localhost:8080/api/auth/register', inputs);
-      const { data } = await axios.post('/api/auth/register', inputs);
+      const { data } = await axios.post('/api/auth/register', inputs, {withCredentials: true});
   
       if (data.error) {
         toast.error(data.error); // This should work if error is properly received
