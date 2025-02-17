@@ -12,6 +12,19 @@ const Footer = () => {
         </Link>
       </div>
 
+      {/* Creator Link */}
+      <p>
+        Created by:{" "}
+        <a 
+          href="https://github.com/PanaitCosmin" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline font-semibold"
+        >
+          Cosmin D. Panait
+        </a>
+      </p>
+
       {/* Text */}
       <span className="text-gray-600 text-sm mt-4 sm:mt-0">
         Made with ❤️ and <b className="text-blue-500">React</b>
