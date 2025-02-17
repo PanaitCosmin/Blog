@@ -16,7 +16,6 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(true);
   const {currentUser} = useAuth()
 
-  const id = currentUser.id
 
   const cleanHTML = DOMPurify.sanitize(post.desc);
   const navigate = useNavigate()
