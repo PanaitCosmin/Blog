@@ -41,8 +41,18 @@ import connectToDb from './db.js'
 app.use(cors({
     origin: allowedOrigin,  // Allow only the frontend domain
     credentials: true,      // If using cookies/authentication
+    methods: ["GET", "POST", "PUT", "DELETE"], 
     allowedHeaders: ["content-type", "authorization"],
 }));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 
 //   app.use(session({
 //     name: 'session_name',
