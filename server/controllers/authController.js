@@ -146,9 +146,11 @@ export const login = async (req, res) => {
 
             // Send user details to frontend (excluding password)
             return res.status(200).json({
-                id: user.id,
-                username: user.username,
-                email: user.email,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email
+                }
             });
 
         });

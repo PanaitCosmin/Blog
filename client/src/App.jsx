@@ -14,7 +14,6 @@ import Profile from './pages/Profile'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
-console.log(import.meta.env.VITE_API_BASE_URL);
 
 
 function App() {
