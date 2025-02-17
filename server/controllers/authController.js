@@ -1,17 +1,17 @@
 import { dbconn } from "../db.js";
 import bcrypt from "bcrypt";
 
-export const getMe = (req, res) => {
-    // console.log("Session:", req.session);
-    console.log("Session ID:", req.sessionID, "Session Data:", req.session);
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+// export const getMe = (req, res) => {
+//     // console.log("Session:", req.session);
+//     console.log("Session ID:", req.sessionID, "Session Data:", req.session);
+//     if (!req.session.user) {
+//         return res.status(401).json({ message: "Not authenticated" });
+//     }
 
-    // Exclude password from the response
-    const { password, ...other } = req.session.user;
-    res.status(200).json(other);
-};
+//     // Exclude password from the response
+//     const { password, ...other } = req.session.user;
+//     res.status(200).json(other);
+// };
 
 export const register = async (req, res) => {
     try {

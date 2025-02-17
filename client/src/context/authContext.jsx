@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
@@ -14,24 +14,6 @@ export const useAuth = () => {
 
 export const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    // 🔹 Fetch session user on mount
-    useEffect(() => {    
-        const fetchUser = async () => {
-            try {
-                const res = await axios.get("/api/auth/me", { withCredentials: true });
-                setCurrentUser(res.data);
-            } catch (error) {
-                console.error("Not authenticated: ", error);
-                setCurrentUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUser();
-    }, []);
 
     // 🔹 Login User
     const login = async (inputs) => {
@@ -62,8 +44,8 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ currentUser, setCurrentUser, login, logout, loading }}>
-            {!loading && children}
+        <AuthContext.Provider value={{ currentUser, setCurrentUser, login, logout }}>
+            {children}
         </AuthContext.Provider>
     );
 };
