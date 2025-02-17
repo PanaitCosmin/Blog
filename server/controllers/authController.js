@@ -55,6 +55,73 @@ export const register = async (req, res) => {
     }
 };
 
+// export const login = async (req, res) => {
+//     try {
+//         const { username, password } = req.body;
+
+//         const query = "SELECT * FROM users WHERE username = ?";
+//         dbconn.query(query, [username], async (err, data) => {
+//             if (err) {
+//                 console.error("Database error:", err);
+//                 return res.status(500).json({ error: "A database error occurred." });
+//             }
+
+//             if (data.length === 0) {
+//                 return res.status(404).json({ error: "User not found." });
+//             }
+
+//             const user = data[0];
+
+//             const isPasswordCorrect = await bcrypt.compare(password, user.password);
+//             if (!isPasswordCorrect) {
+//                 return res.status(400).json({ error: "Incorrect password." });
+//             }
+
+//             // 🔹 Assign user to existing session instead of creating a new one
+//             req.session.user = {
+//                 id: user.id,
+//                 username: user.username,
+//                 email: user.email,
+//             };
+
+//             req.session.save((err) => {
+//                 if (err) {
+//                     console.error("Session save error:", err);
+//                     return res.status(500).json({ error: "Session error." });
+//                 }
+
+//                 console.log("User logged in, session updated:", req.session);
+//                 res.status(200).json({
+//                     user: req.session.user,
+//                     success: "Login successful",
+//                 });
+//             });
+//         });
+//     } catch (error) {
+//         console.error("Login error:", error);
+//         res.status(500).json({ message: "An unexpected error occurred during login." });
+//     }
+// };
+
+
+// export const logout = (req, res) => {
+//     req.session.destroy((err) => {
+//         if (err) {
+//             console.error("Logout error:", err);
+//             return res.status(500).json({ error: "Logout failed" });
+//         }
+
+//         res.clearCookie("connect.sid", {
+//             httpOnly: true,
+//             secure: process.env.NODE_ENV === "production",
+//             sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+//         });
+
+//         res.status(200).json({ message: "User has been logged out." });
+//     });
+// };
+
+
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -77,25 +144,13 @@ export const login = async (req, res) => {
                 return res.status(400).json({ error: "Incorrect password." });
             }
 
-            // 🔹 Assign user to existing session instead of creating a new one
-            req.session.user = {
+            // Send user details to frontend (excluding password)
+            return res.status(200).json({
                 id: user.id,
                 username: user.username,
                 email: user.email,
-            };
-
-            req.session.save((err) => {
-                if (err) {
-                    console.error("Session save error:", err);
-                    return res.status(500).json({ error: "Session error." });
-                }
-
-                console.log("User logged in, session updated:", req.session);
-                res.status(200).json({
-                    user: req.session.user,
-                    success: "Login successful",
-                });
             });
+
         });
     } catch (error) {
         console.error("Login error:", error);
@@ -103,20 +158,7 @@ export const login = async (req, res) => {
     }
 };
 
-
 export const logout = (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Logout error:", err);
-            return res.status(500).json({ error: "Logout failed" });
-        }
-
-        res.clearCookie("connect.sid", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        });
-
-        res.status(200).json({ message: "User has been logged out." });
-    });
+    // Since there's no session or token to clear, just send a response
+    return res.status(200).json({ message: "User logged out successfully." });
 };

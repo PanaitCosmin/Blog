@@ -45,11 +45,11 @@ export const updateUser = (req, res) => {
         }
 
         // Update session with new user info
-        req.session.user = {
-            id: userId,
-            username: username || req.session.user.username,
-            email: email || req.session.user.email,
-        };
+        // req.session.user = {
+        //     id: userId,
+        //     username: username || req.session.user.username,
+        //     email: email || req.session.user.email,
+        // };
 
         return res.status(200).json({ success: "Profile updated successfully" });
     });
@@ -75,12 +75,12 @@ export const deleteUser = (req, res) => {
         }
 
         // Destroy session after deletion
-        req.session.destroy((err) => {
-            if (err) {
-                return res.status(500).json({ message: "Error clearing session" });
-            }
+        // req.session.destroy((err) => {
+        //     if (err) {
+        //         return res.status(500).json({ message: "Error clearing session" });
+        //     }
 
-            return res.status(200).json({ success: "User deleted successfully" });
-        });
+        // });
+        return res.status(200).json({ success: "User deleted successfully" });
     });
 };
