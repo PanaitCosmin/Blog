@@ -5,7 +5,7 @@ import authRoute from './routes/authRoute.js'
 import postRoute from './routes/postRoute.js'
 import userRoute from './routes/userRoute.js'
 import { upload, deleteOldImage  } from './helpers/upload.js'
-import session from 'express-session';
+// import session from 'express-session';
 
 const PORT = process.env.PORT
 const app = express()
@@ -15,27 +15,27 @@ console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
 const allowedOrigin = process.env.CLIENT; 
 console.log('Origin:', allowedOrigin)
 
-import mysql from "mysql2"; // ✅ Use "mysql2" (not "mysql2/promise")
-import MySQLStore from "express-mysql-session";
+// import mysql from "mysql2"; // ✅ Use "mysql2" (not "mysql2/promise")
+// import MySQLStore from "express-mysql-session";
 import connectToDb from './db.js'
-const dbPool = mysql.createPool({
-    host: process.env.HOST_DB,
-    user: process.env.USER_DB,
-    password: process.env.PASSWORD_DB,
-    database: process.env.DB,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
+// const dbPool = mysql.createPool({
+//     host: process.env.HOST_DB,
+//     user: process.env.USER_DB,
+//     password: process.env.PASSWORD_DB,
+//     database: process.env.DB,
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0,
+// });
 
 
-const sessionStore = new (MySQLStore(session))({
-    clearExpired: true,
-    expiration: 86400000,
-      checkExpirationInterval: 3600000,
-    createDatabaseTable: true,
-      }, 
-      dbPool);
+// const sessionStore = new (MySQLStore(session))({
+//     clearExpired: true,
+//     expiration: 86400000,
+//       checkExpirationInterval: 3600000,
+//     createDatabaseTable: true,
+//       }, 
+//       dbPool);
 
 // Middleware
 app.use(cors({
@@ -44,19 +44,19 @@ app.use(cors({
     allowedHeaders: ["content-type", "authorization"],
 }));
 
-  app.use(session({
-    name: 'session_name',
-    secret: process.env.SESSION_SECRET || 'your_secret_key',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production', // Secure in production
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        sameSite: "None"
-    }
-}));
+//   app.use(session({
+//     name: 'session_name',
+//     secret: process.env.SESSION_SECRET || 'your_secret_key',
+//     store: sessionStore,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         secure: process.env.NODE_ENV === 'production', // Secure in production
+//         httpOnly: true,
+//         maxAge: 24 * 60 * 60 * 1000, // 1 day
+//         sameSite: "None"
+//     }
+// }));
 
 app.use(express.json())
 app.use(cookieParser())
