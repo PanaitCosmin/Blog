@@ -2,6 +2,7 @@ import { dbconn } from "../db.js";
 import bcrypt from "bcrypt";
 
 export const getMe = (req, res) => {
+    console.log("Session:", req.session);
     if (!req.session.user) {
         return res.status(401).json({ message: "Not authenticated" });
     }

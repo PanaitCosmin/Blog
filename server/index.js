@@ -44,7 +44,7 @@ app.use(cors({
   }));
 
   app.use(session({
-    key: 'session_cookie_name',
+    name: 'session_name',
     secret: process.env.SESSION_SECRET || 'your_secret_key',
     store: sessionStore,
     resave: false,
@@ -53,6 +53,7 @@ app.use(cors({
         secure: process.env.NODE_ENV === 'production', // Secure in production
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
+        sameSite: "None"
     }
 }));
 
