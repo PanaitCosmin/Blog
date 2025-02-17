@@ -3,9 +3,9 @@ import bcrypt from "bcrypt";
 
 // 🔹 Update User
 export const updateUser = (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Not authenticated" });
+    // }
 
     const userId = req.session.user.id;
     const { username, email, password } = req.body;
@@ -57,9 +57,9 @@ export const updateUser = (req, res) => {
 
 // 🔹 Delete User
 export const deleteUser = (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Not authenticated" });
+    // }
 
     const userId = req.session.user.id;
     const deleteQuery = "DELETE FROM users WHERE id = ?";

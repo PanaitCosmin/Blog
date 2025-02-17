@@ -52,9 +52,9 @@ export const getMenuPosts = (req, res) => {
 
 // 🔹 Create Post
 export const addPost = (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Not authenticated" });
+    // }
 
     const userId = req.session.user.id;
 
@@ -72,9 +72,9 @@ export const addPost = (req, res) => {
 
 // 🔹 Delete Single Post
 export const deletePost = (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Not authenticated" });
+    // }
 
     const postId = req.params.id;
     const userId = req.session.user.id;
@@ -135,9 +135,9 @@ export const deletePost = (req, res) => {
 
 // 🔹 Update Post
 export const updatePost = (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Not authenticated" });
+    // }
 
     const postId = req.params.id;
     const userId = req.session.user.id;
