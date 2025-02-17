@@ -56,7 +56,7 @@ export const addPost = (req, res) => {
     //     return res.status(401).json({ message: "Not authenticated" });
     // }
 
-    const userId = req.session.user.id;
+    const userId = req.body.id;
 
     const queryAddPost = "INSERT INTO posts (`title`, `desc`, `img`, `cat`, `date`, `userid`) VALUES (?)";
 
@@ -72,14 +72,16 @@ export const addPost = (req, res) => {
 
 // 🔹 Delete Single Post
 export const deletePost = (req, res) => {
-    // if (!req.session.user) {
-    //     return res.status(401).json({ message: "Not authenticated" });
-    // }
-
     const postId = req.params.id;
-    const userId = req.session.user.id;
+    const userId = req.body.id;  // ✅ Extract userId properly
 
-    // Get the post to check ownership & image URL
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is required." });
+    }
+
+    console.log('Post id:', postId);
+    console.log('User id:', userId);
+
     const queryGetPost = "SELECT img FROM posts WHERE id = ? AND userid = ?";
     dbconn.query(queryGetPost, [postId, userId], async (err, result) => {
         if (err) {
@@ -96,9 +98,9 @@ export const deletePost = (req, res) => {
         const getPublicIdFromUrl = (url) => {
             try {
                 const parts = url.split("/");
-                const fileName = parts.pop(); // e.g., "image.webp"
-                const folder = parts.slice(parts.indexOf("blog_images")).join("/"); // "blog_images"
-                return `${folder}/${fileName.split(".")[0]}`; // "blog_images/imageName"
+                const fileName = parts.pop();
+                const folder = parts.slice(parts.indexOf("blog_images")).join("/");
+                return `${folder}/${fileName.split(".")[0]}`;
             } catch (error) {
                 console.error("Error extracting public ID:", error);
                 return null;
@@ -133,6 +135,7 @@ export const deletePost = (req, res) => {
     });
 };
 
+
 // 🔹 Update Post
 export const updatePost = (req, res) => {
     // if (!req.session.user) {
@@ -140,7 +143,7 @@ export const updatePost = (req, res) => {
     // }
 
     const postId = req.params.id;
-    const userId = req.session.user.id;
+    const userId = req.body.id;
 
     const queryUpdatePost = `
         UPDATE posts 

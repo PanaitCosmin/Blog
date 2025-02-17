@@ -10,6 +10,7 @@ const Profile = () => {
   const { currentUser, setCurrentUser, logout } = useAuth()
 
   const [formData, setFormData] = useState({
+    id: currentUser.id,
     username: currentUser?.username || '',
     email: currentUser?.email || '',
     password: '',

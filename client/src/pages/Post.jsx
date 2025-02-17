@@ -16,6 +16,8 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(true);
   const {currentUser} = useAuth()
 
+  const id = currentUser.id
+
   const cleanHTML = DOMPurify.sanitize(post.desc);
   const navigate = useNavigate()
   const location = useLocation()
@@ -42,17 +44,20 @@ const Post = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/posts/${postId}`, {
-        withCredentials: true
-      })
+        await axios.delete(`/api/posts/${postId}`, {
+            data: { id: currentUser.id },  // ✅ Pass user ID inside `data`
+            withCredentials: true
+        });
 
-      toast.success('Post deleted!')
-      navigate('/')
+        toast.success('Post deleted!');
+        navigate('/');
 
     } catch (error) {
-      console.log(error)
+        console.log(error);
+        toast.error(error.response?.data?.message || "Failed to delete post");
     }
-  }
+};
+
 
   return (
     <div className="single flex flex-col md:flex-row gap-8 p-4 md:p-8 mt-24">

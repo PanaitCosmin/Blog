@@ -7,7 +7,7 @@ export const updateUser = (req, res) => {
     //     return res.status(401).json({ message: "Not authenticated" });
     // }
 
-    const userId = req.session.user.id;
+    const userId = req.body.id;
     const { username, email, password } = req.body;
 
     // Hash new password if provided
@@ -61,7 +61,7 @@ export const deleteUser = (req, res) => {
     //     return res.status(401).json({ message: "Not authenticated" });
     // }
 
-    const userId = req.session.user.id;
+    const userId = req.body.id;
     const deleteQuery = "DELETE FROM users WHERE id = ?";
 
     dbconn.query(deleteQuery, [userId], (err, result) => {

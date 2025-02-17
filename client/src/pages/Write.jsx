@@ -5,10 +5,12 @@ import axios from 'axios';
 import moment from 'moment';
 import 'react-quill/dist/quill.snow.css';
 import { toast } from 'react-hot-toast'
+import { useAuth } from '../context/authContext';
 
 
 
 const Write = () => {
+  const {currentUser} = useAuth()
   const navigate = useNavigate();
   const state = useLocation().state;
 
@@ -54,6 +56,7 @@ const Write = () => {
     }
   
     const postData = {
+      id: currentUser.id,
       title,
       desc,
       cat,
