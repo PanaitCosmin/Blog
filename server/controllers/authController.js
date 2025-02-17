@@ -2,7 +2,8 @@ import { dbconn } from "../db.js";
 import bcrypt from "bcrypt";
 
 export const getMe = (req, res) => {
-    console.log("Session:", req.session);
+    // console.log("Session:", req.session);
+    console.log("Session ID:", req.sessionID, "Session Data:", req.session);
     if (!req.session.user) {
         return res.status(401).json({ message: "Not authenticated" });
     }
@@ -58,7 +59,6 @@ export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Fetch user from DB
         const query = "SELECT * FROM users WHERE username = ?";
         dbconn.query(query, [username], async (err, data) => {
             if (err) {
@@ -72,23 +72,29 @@ export const login = async (req, res) => {
 
             const user = data[0];
 
-            // Validate password
             const isPasswordCorrect = await bcrypt.compare(password, user.password);
             if (!isPasswordCorrect) {
                 return res.status(400).json({ error: "Incorrect password." });
             }
 
-            // Store user info in session
+            // 🔹 Assign user to existing session instead of creating a new one
             req.session.user = {
                 id: user.id,
                 username: user.username,
                 email: user.email,
             };
 
-            // Send response
-            res.status(200).json({
-                user: req.session.user,
-                success: "Login successful",
+            req.session.save((err) => {
+                if (err) {
+                    console.error("Session save error:", err);
+                    return res.status(500).json({ error: "Session error." });
+                }
+
+                console.log("User logged in, session updated:", req.session);
+                res.status(200).json({
+                    user: req.session.user,
+                    success: "Login successful",
+                });
             });
         });
     } catch (error) {
@@ -96,6 +102,7 @@ export const login = async (req, res) => {
         res.status(500).json({ message: "An unexpected error occurred during login." });
     }
 };
+
 
 export const logout = (req, res) => {
     req.session.destroy((err) => {
