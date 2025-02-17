@@ -78,7 +78,7 @@ const Post = () => {
             ) : (
               <>
                 <p className="font-semibold text-lg">By <span className='text-blue-600'>{post.username}</span></p>
-                <p className="text-gray-500 text-sm">Posted {moment(post.date).fromNow()}</p>              
+                <p className="text-gray-500 text-sm">Posted {moment.utc(post.date).local().fromNow()}</p>
               </>
             )}
           </div>
