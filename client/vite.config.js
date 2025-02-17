@@ -7,4 +7,15 @@ export default defineConfig({
     tailwindcss(),
     react()
   ],
+
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://blog-gej1.onrender.com", // Your backend URL
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
+  
 });
