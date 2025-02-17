@@ -58,7 +58,7 @@ const Write = () => {
       desc,
       cat,
       img: imageUrl, // Use updated Cloudinary URL
-      date: moment().format('YYYY-MM-DD HH:mm:ss'),
+      date: moment().utc().format('YYYY-MM-DD HH:mm:ss'),
     };
   
     try {
