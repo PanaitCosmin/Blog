@@ -10,6 +10,8 @@ import session from 'express-session';
 const PORT = process.env.PORT
 const app = express()
 
+console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
+
 const allowedOrigin = process.env.CLIENT; 
 console.log('Origin:', allowedOrigin)
 
