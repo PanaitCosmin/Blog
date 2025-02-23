@@ -4,6 +4,7 @@
 <br>
 **LIVE**: https://blog-panaitcosmins-projects.vercel.app/
 <br>
+<br>
 For this project, I used various services:
 <ol>
   <li><strong>Render</strong> - backend deploy</li>
