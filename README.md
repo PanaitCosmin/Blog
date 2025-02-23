@@ -15,7 +15,7 @@ For this project, I used various services:
 <br>
 This website is a fully functional blog where users can view posts and register to write their own.
 
-![Blog home desktop](/img_blog/desktop_home.png)
+![Blog home desktop](/img_blog/desktop_home.jpg)
 
 Register & Login pages:
 ![Blog register desktop](/img_blog/desktop_register.png)
@@ -25,9 +25,9 @@ The structure of the posts is straightforward: each post includes a title, a bod
 ![Blog create post desktop](/img_blog/desktop_create_post.png)
 
 The posts can be edited or deleted by the author if they are logged in. Additionally, the five most recent posts from the same category will be displayed on the right side.
-![Blog single post desktop](/img_blog/desktop_post.png)
+![Blog single post desktop](/img_blog/desktop_post.jpg)
 
 Every website nowadays should be mobile-friendly, and this blog website is no exception. Users will find an intuitive user interface (UI), and the content is fully responsive across different screen sizes.
 <br>
-<img src="/img_blog/mobile_home.png" align="left" height="70%"  alt="blog mobile home">
-<img src="/img_blog/mobile_post.png" align="left" height="70%" alt="blog mobile post">
+<img src="/img_blog/mobile_home.jpg" align="left" height="70%"  alt="blog mobile home">
+<img src="/img_blog/mobile_post.jpg" align="left" height="70%" alt="blog mobile post">
