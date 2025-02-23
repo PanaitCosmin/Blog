@@ -3,7 +3,15 @@
 **Keynotes**: React | ExpressJS | MySQL | TailwindCSS | Responsive Design 
 <br>
 **LIVE**: https://blog-panaitcosmins-projects.vercel.app/
-
+<br>
+For this project, I used various services:
+<ol>
+  <li><strong>Render</strong> - backend deploy</li>
+  <li><strong>Vercel</strong> - frontend deploy</li>
+  <li><strong>Cloudinary</strong> - media management</li>
+  <li><strong>AWS</strong> - MySQl database</li>
+</ol>
+<br>
 This website is a fully functional blog where users can view posts and register to write their own.
 ![Blog home desktop](/img_blog/desktop_home.png)
 
@@ -21,11 +29,3 @@ Every website nowadays should be mobile-friendly, and this blog website is no ex
 <br>
 <img src="/img_blog/mobile_home.png" align="left" height="500" width="325" >
 <img src="/img_blog/mobile_post.png" align="left" height="500" width="325" >
-
-For this project i used different servicies:
-<ol>
-  <li><strong>Render</strong> - backend deploy</li>
-  <li><strong>Vercel</strong> - frontend deploy</li>
-  <li><strong>Cloudinary</strong> - media management</li>
-  <li><strong>AWS</strong> - MySQl database</li>
-</ol>
