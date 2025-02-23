@@ -14,6 +14,7 @@ For this project, I used various services:
 </ol>
 <br>
 This website is a fully functional blog where users can view posts and register to write their own.
+
 ![Blog home desktop](/img_blog/desktop_home.png)
 
 Register & Login pages:
