@@ -18,11 +18,14 @@ The posts can be edited or deleted by the author if they are logged in. Addition
 ![Blog single post desktop](/img_blog/desktop_post.png)
 
 Every website nowadays should be mobile-friendly, and this blog website is no exception. Users will find an intuitive user interface (UI), and the content is fully responsive across different screen sizes.
+<br>
 <img src="/img_blog/mobile_home.png" align="left" height="500" width="325" >
 <img src="/img_blog/mobile_post.png" align="left" height="500" width="325" >
 
 For this project i used different servicies:
-<strong>Render</strong> - backend deploy
-<strong>Vercel</strong> - frontend deploy
-<strong>Cloudinary</strong> - media management
-<strong>AWS</strong> - MySQl database
+<ol>
+  <li><strong>Render</strong> - backend deploy</li>
+  <li><strong>Vercel</strong> - frontend deploy</li>
+  <li><strong>Cloudinary</strong> - media management</li>
+  <li><strong>AWS</strong> - MySQl database</li>
+</ol>
