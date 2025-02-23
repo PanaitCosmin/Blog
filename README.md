@@ -29,5 +29,5 @@ The posts can be edited or deleted by the author if they are logged in. Addition
 
 Every website nowadays should be mobile-friendly, and this blog website is no exception. Users will find an intuitive user interface (UI), and the content is fully responsive across different screen sizes.
 <br>
-<img src="/img_blog/mobile_home.png" align="left" height="500" width="325" >
-<img src="/img_blog/mobile_post.png" align="left" height="500" width="325" >
+<img src="/img_blog/mobile_home.png" align="left" height="70%"  alt="blog mobile home">
+<img src="/img_blog/mobile_post.png" align="left" height="70%" alt="blog mobile post">
