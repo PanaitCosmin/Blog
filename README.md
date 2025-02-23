@@ -10,7 +10,7 @@ For this project, I used various services:
   <li><strong>Render</strong> - backend deploy</li>
   <li><strong>Vercel</strong> - frontend deploy</li>
   <li><strong>Cloudinary</strong> - media management</li>
-  <li><strong>AWS</strong> - MySQl database</li>
+  <li><strong>AWS</strong> - MySQL database</li>
 </ol>
 <br>
 This website is a fully functional blog where users can view posts and register to write their own.
